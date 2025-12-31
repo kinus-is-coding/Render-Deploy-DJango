@@ -12,7 +12,7 @@ db.sqlite3
 
 # Môi trường & Bảo mật
 .env
-deployment_settings.py (Nếu file này chứa mật khẩu thật)
+deployment_settings.py 
 
 # OS rác
 .DS_Store
