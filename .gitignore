@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Django
+db.sqlite3
+/staticfiles/
+/media/
+
+# Môi trường & Bảo mật
+.env
+deployment_settings.py (Nếu file này chứa mật khẩu thật)
+
+# OS rác
+.DS_Store
