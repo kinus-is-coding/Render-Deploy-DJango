@@ -18,14 +18,15 @@ class PostSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'location', 'image_url', 'created_at', 
             'author_username', 'quiz_questions',
-            'locker_id', 
+            'locker', 
             'questions' 
         ]
         read_only_fields = ['id', 'created_at', 'author_username', 'quiz_questions']
         
+
+
     def create(self, validated_data):
         questions_data = validated_data.pop('questions', []) or []
-        
         post = Post.objects.create(**validated_data)
         
         for q_data in questions_data:
