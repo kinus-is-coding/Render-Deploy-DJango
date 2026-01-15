@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-rzy8#)a-%66*nw@zje1sl8-i^^t53fe2s)qh6di4qjnetzgg1x
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+AUTH_USER_MODEL = 'users.User' # Đổi từ feed.User sang users.User
 ALLOWED_HOSTS = []
 
 
@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'feed', 
     'users',
+    'feed', 
 ]
 
 MIDDLEWARE = [
@@ -54,7 +54,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'lostnfound.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

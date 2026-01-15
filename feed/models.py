@@ -30,19 +30,19 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.is_active and self.locker:
-            exists = Post.objects.filter(
-                locker=self.locker, 
-                is_active=True
-            ).exclude(pk=self.pk).exists()
-            
-            if exists:
-                raise ValueError(f"Locker {self.locker.locker_id} hiện đang có người sử dụng!")
+        # Kiểm tra xem đây là tạo mới (không có ID) hay cập nhật
+        is_creating = self.pk is None
 
-            if not self.pk:
-                # 1. Đánh dấu tủ đã bị chiếm
+        if self.is_active and self.locker:
+            # 1. Chặn việc gán một cái tủ đang bận (is_occupied=True) cho bài Post mới
+            # Chỉ check khi tạo mới hoặc khi thay đổi locker sang một cái locker khác
+            if is_creating and self.locker.is_occupied:
+                raise ValueError(f"Ngăn tủ {self.locker.locker_id} này hiện đang bận rồi!")
+
+            # 2. Logic khi lưu bài Post thành công (Lần đầu tạo)
+            if is_creating:
+                # Đánh dấu tủ bận và kích hoạt ESP32 mở cửa để người dùng bỏ đồ vào
                 self.locker.is_occupied = True
-                # 2. Bật công tắc mở khóa cho ESP32
                 self.locker.trigger_unlock = True
                 self.locker.save()
 
@@ -56,3 +56,4 @@ class QuizQuestion(models.Model):
     
     def __str__(self):
         return f"Q for Post {self.post.id}: {self.question_text[:30]}..."
+    

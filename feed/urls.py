@@ -1,6 +1,6 @@
 # feed/urls.py
 from django.urls import path
-from .views import PostViewSet,locker_status_api,locker_confirm_action 
+from .views import PostViewSet,locker_status_api,locker_confirm_action ,verify_and_grant_key
 
 urlpatterns = [
   
@@ -22,4 +22,5 @@ urlpatterns = [
     }), name='post-detail'),
     path('locker/<str:locker_id>/status/',locker_status_api),
     path('locker/<str:locker_id>/confirm/', locker_confirm_action),
+    path('addlock/', verify_and_grant_key, name='addlock'),
 ]

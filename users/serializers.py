@@ -50,3 +50,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             data["user_id"] = user.id
           
             return data
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # Trả thêm thông tin user kèm theo token
+        data['username'] = self.user.username
+        data['owned_lockers'] = self.user.owned_locker_ids
+        return data    

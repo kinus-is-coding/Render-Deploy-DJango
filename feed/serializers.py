@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Post, QuizQuestion
-
 class QuizQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizQuestion
@@ -24,7 +23,7 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'author_username', 'quiz_questions']
         
 
-
+    
     def create(self, validated_data):
         questions_data = validated_data.pop('questions', []) or []
         post = Post.objects.create(**validated_data)
@@ -37,3 +36,5 @@ class PostSerializer(serializers.ModelSerializer):
                 correct_choice_id=q_data.get('correctChoiceId')
             ) 
         return post
+
+
