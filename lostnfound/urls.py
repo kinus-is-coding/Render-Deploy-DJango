@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),    
+    path('admin/', admin.site.urls),    
     
     # JWT Auth Endpoints (LOGIN)
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
