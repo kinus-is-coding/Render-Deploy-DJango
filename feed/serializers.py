@@ -1,17 +1,20 @@
 from rest_framework import serializers
-from .models import Post, QuizQuestion
+from .models import Post, QuizQuestion,Locker
 class QuizQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizQuestion
         fields = ['id', 'question_text', 'choices_json', 'correct_choice_id']
 
 
-
+class LockerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Locker
+        fields = ['locker_id', 'is_occupied'] # thêm các field bro cần
 class PostSerializer(serializers.ModelSerializer):
     questions = serializers.JSONField(write_only=True, required=False) 
     quiz_questions = QuizQuestionSerializer(many=True, read_only=True)
     author_username = serializers.CharField(source='author.username', read_only=True)
-    
+    locker = LockerSerializer(read_only=True)
     class Meta:
         model = Post
         fields = [

@@ -23,4 +23,5 @@ urlpatterns = [
     path('locker/<str:locker_id>/status/',locker_status_api),
     path('locker/<str:locker_id>/confirm/', locker_confirm_action),
     path('addlock/', verify_and_grant_key, name='addlock'),
+    path('posts/my_virtual_keys/', PostViewSet.as_view({'get': 'my_virtual_keys'}), name='post-my-keys'),
 ]

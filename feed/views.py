@@ -91,8 +91,35 @@ class PostViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=500)
     
+    # Trong class PostViewSet:
+    @action(detail=False, methods=['get'])
+    def my_virtual_keys(self, request):
+        user = request.user
+        owned_ids = getattr(user, 'owned_locker_ids', [])
 
+        if not owned_ids:
+            return Response([])
 
+        # 1. Lấy tất cả bài Post có locker_id nằm trong ví
+        # Lọc ĐIỀU KIỆN: is_active=False
+        # Sắp xếp: Mới nhất lên đầu (-created_at)
+        all_related_posts = Post.objects.filter(
+            locker__locker_id__in=owned_ids,
+            is_active=False  
+        ).select_related('locker').order_by('locker__locker_id', '-created_at')
+
+        # 2. Dùng Map để chỉ lấy 1 bài duy nhất (mới nhất) cho mỗi locker_id
+        latest_posts_map = {}
+        for post in all_related_posts:
+            l_id = post.locker.locker_id
+            # Vì đã order_by -created_at nên bài đầu tiên gặp sẽ là mới nhất
+            if l_id not in latest_posts_map:
+                latest_posts_map[l_id] = post
+
+        # 3. Trả về danh sách đã lọc
+        final_posts = list(latest_posts_map.values())
+        serializer = self.get_serializer(final_posts, many=True)
+        return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -131,10 +158,13 @@ def verify_and_grant_key(request):
     try:
         post = Post.objects.get(id=post_id)
         # Check quiz...
-        if True: # Giả sử đúng
+        if post.is_active==True: # Giả sử đúng
             request.user.add_locker(post.locker.locker_id)
             post.is_active = False
             post.save()
             return Response({"status": "success"})
     except Post.DoesNotExist:
         return Response(status=404)
+
+
+
